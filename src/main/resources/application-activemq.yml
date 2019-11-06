@@ -1,0 +1,17 @@
+
+activemq:
+  broker-url: failover:(ssl://b-7c8d38b7-0d83-422b-80a6-de0d3762a187-1.mq.ap-northeast-2.amazonaws.com:61617,ssl://b-7c8d38b7-0d83-422b-80a6-de0d3762a187-2.mq.ap-northeast-2.amazonaws.com:61617)
+  user: opbroker
+  password: opbroker1234
+  pool:
+    max-connections: 50
+
+---
+
+spring:
+  profiles: prod
+
+activemq:
+  broker-url: failover:(ssl://b-397a24e4-4a77-4d2b-9d7f-20e629f5878d-1.mq.ap-northeast-2.amazonaws.com:61617,ssl://b-397a24e4-4a77-4d2b-9d7f-20e629f5878d-2.mq.ap-northeast-2.amazonaws.com:61617)
+  user: newescmprod
+  password: 02cf5114-cd36-4e54-97df-97c4d343b4c6

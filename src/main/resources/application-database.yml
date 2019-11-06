@@ -1,0 +1,129 @@
+
+spring:
+  profiles: local
+
+datasource:
+  default:
+    driver-class-name: "oracle.jdbc.driver.OracleDriver"
+    #url: "jdbc:oracle:thin:@wms-vip.db.prod.aws-k.kurlycorp.kr:1521:REALWMS"
+    url: "jdbc:oracle:thin:@211.174.50.215:1521:REALWMS"
+    user-name: "LOTOS"
+    password: "REALKURLY"
+    initial-size: 10
+    max-active: 100
+    max-idle: 100
+    min-idle: 10
+    time-between-eviction-runs-millis: 150000
+    min-evictable-idle-time-millis: -1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: SELECT 1 FROM DUAL
+
+---
+
+spring:
+  profiles: dev
+
+datasource:
+  default:
+    driver-class-name: "oracle.jdbc.driver.OracleDriver"
+    #url: "jdbc:oracle:thin:@wms-vip.db.prod.aws-k.kurlycorp.kr:1521:DEVWMS"
+    url: "jdbc:oracle:thin:@211.174.50.215:1521:REALWMS"
+    user-name: "LOTOS"
+    password: "REALKURLY"
+    initial-size: 10
+    max-active: 100
+    max-idle: 100
+    min-idle: 10
+    time-between-eviction-runs-millis: 150000
+    min-evictable-idle-time-millis: -1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: SELECT 1 FROM DUAL
+
+---
+
+spring:
+  profiles: daily
+
+datasource:
+  default:
+    driver-class-name: "oracle.jdbc.driver.OracleDriver"
+    url: "jdbc:oracle:thin:@211.174.50.215:1521:TESTWMS"
+    user-name: "LOTOS"
+    password: "REALKURLY"
+    initial-size: 30
+    max-active: 100
+    max-idle: 100
+    min-idle: 10
+    time-between-eviction-runs-millis: 150000
+    min-evictable-idle-time-millis: -1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: SELECT 1 FROM DUAL
+
+---
+
+spring:
+  profiles: stg
+
+datasource:
+  default:
+    driver-class-name: "oracle.jdbc.driver.OracleDriver"
+    url: "jdbc:oracle:thin:@wms.db.prod.aws-k.kurlycorp.kr:1521:REALWMS"
+    user-name: "LOTOS"
+    password: "REALKURLY"
+    initial-size: 30
+    max-active: 100
+    max-idle: 100
+    min-idle: 10
+    max-wait: 10000
+    time-between-eviction-runs-millis: 150000
+    min-evictable-idle-time-millis: -1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: SELECT 1 FROM DUAL
+
+
+---
+
+spring:
+  profiles: prod
+
+datasource:
+  default:
+    driver-class-name: "oracle.jdbc.driver.OracleDriver"
+    url: "jdbc:oracle:thin:@wms.db.prod.aws-k.kurlycorp.kr:1521:REALWMS"
+    user-name: "LOTOS"
+    password: "REALKURLY"
+    initial-size: 30
+    max-active: 100
+    max-idle: 100
+    min-idle: 10
+    max-wait: 10000
+    time-between-eviction-runs-millis: 150000
+    min-evictable-idle-time-millis: -1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: SELECT 1 FROM DUAL
+
+  hwado:
+    driver-class-name: "com.microsoft.sqlserver.jdbc.SQLServerDriver"
+    url: "jdbc:sqlserver://123.140.253.34:1433;database=Kurly_WCS"
+    user-name: "if_user"
+    password: "if_pass@2019"
+    initial-size: 2
+    max-active: 2
+    max-idle: 2
+    min-idle: 2
+    time-between-eviction-runs-millis: 150000
+    min-evictable-idle-time-millis: -1
+    test-while-idle: true
+    test-on-borrow: false
+    test-on-return: false
+    validation-query: SELECT 1

@@ -1,0 +1,49 @@
+spring:
+  profiles.include:
+    - activemq
+    - slack
+    - database
+
+logging:
+    level:
+      org.springframework: warn
+      org.springframework.web: debug
+      com.kurly.wms.message: debug
+      java.sql: debug
+      jdbc.sqlonly: debug
+      jdbc.resultset: debug
+
+# JWT Token
+jwtKey: 6447686C5A6D46796257567963773D3D
+
+# Message Broker channel 정보,
+# VirtualTopic방식: Consumer.<name>.VirtualTopic.<name>
+messages:
+  channel:
+    receiving: Consumer.wms.VirtualTopic.rcvTransaction
+
+---
+
+spring:
+  profiles: local
+
+---
+
+spring:
+  profiles: dev
+
+---
+
+spring:
+  profiles: daily
+
+
+---
+
+spring:
+  profiles: stg
+
+---
+
+spring:
+  profiles: prod

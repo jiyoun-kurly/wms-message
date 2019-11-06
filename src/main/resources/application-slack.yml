@@ -1,0 +1,66 @@
+
+spring:
+  profiles: local
+
+slack:
+  info:
+   slackUrl: "https://hooks.slack.com/services/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"
+   slackChannel: "#test_ms"
+   scannerAlarmChannel: "#scanner_bot_test"
+   wmsScannerHighChannel: "#wms_scanner_high"
+   wmsScannerMidChannel: "#wms_scanner_mid"
+   wmsScannerLowChannel: "#wms_scanner_low"
+   wmsScannerEtcChannel: "#wms_scanner_etc"
+   regionSlackChannel: "#test_ms"
+   orderIfSlackChannel: "#op_slack_bot_tset"
+   receivingIfSlackChannel: "#rms-service-alarm-test"
+   wmsDasIfSlackChannel: "#wms-das-alarm"
+---
+
+spring:
+  profiles: dev
+
+slack:
+  info:
+   slackUrl: "https://hooks.slack.com/services/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"
+   slackChannel: "#test_ms"
+   scannerAlarmChannel: "#scanner_bot_test"
+   regionSlackChannel: "#test_ms"
+   orderIfSlackChannel: "#op_slack_bot_tset"
+   wmsScannerHighChannel: "#scanner_bot_test"
+   wmsScannerMidChannel: "#scanner_bot_test"
+   wmsScannerLowChannel: "#scanner_bot_test"
+   wmsScannerEtcChannel: "#scanner_bot_test"
+   receivingIfSlackChannel: "#rms-service-alarm-test"
+   wmsDasIfSlackChannel: "#wms-das-alarm"
+
+---
+
+spring:
+  profiles: daily
+
+
+---
+
+spring:
+  profiles: stg
+
+
+---
+
+spring:
+  profiles: prod
+
+slack:
+  info:
+   slackUrl: "https://hooks.slack.com/services/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"
+   slackChannel: "#tms"
+   scannerAlarmChannel: "#scanner_alarm_bot"
+   wmsScannerHighChannel: "#wms_scanner_high"
+   wmsScannerMidChannel: "#wms_scanner_mid"
+   wmsScannerLowChannel: "#wms_scanner_low"
+   wmsScannerEtcChannel: "#wms_scanner_etc"
+   regionSlackChannel: "#tms_region_alarm_bot"
+   orderIfSlackChannel: "#wms_order_if_info"
+   receivingIfSlackChannel: "#inbound-service-alarm"
+   wmsDasIfSlackChannel: "#wms-das-alarm"

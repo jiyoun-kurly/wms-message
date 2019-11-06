@@ -1,0 +1,82 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kurly.wms.message.repository.OrderMapper">
+    <select id="findDuplicateNewOrder" parameterType="String" resultType="String">
+      SELECT
+            VBELN
+        FROM IFWMS113
+        WHERE STATUS = 'A'
+        <if test="list.size != 0">
+            AND VBELN IN
+            <foreach collection="list" item="orderCode"  open="(" close=")" separator=",">
+                #{orderCode}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findOrder" parameterType="map" resultType="com.kurly.wms.message.domain.WmsOrder">
+        SELECT
+            MANDT, SEQNO, VBELN, POSNR, BWART,
+            PSTYV, ZLIKP_ERDAT, ZLIKP_ERZET, WADAT, KUNNR,
+            KUNAG, WERKS, BWTAR, STKNUM, STATUS,
+            TDATE, IFFLG, RETRY, ERTXT, LFIMG, MEINS, WAERK,
+            CUSRID, CUNAME, CPSTLZ, TELF1, TELE2,
+            SMTP_ADDR, VTEXT, ADDR, CNAME, CPHON,
+            WAREKY, SKUKEY, DESC01, DESC02, CREDAT,
+            CRETIM, LMODAT, LMOTIM, C00101, C00102,
+            C00103, C00106, C00104, C00105, C00107, C00108, C00109, C00110,
+            DEPTID2, USRID3, DEPTID3, USRID4, DEPTID4, KUKLA, USRID1
+            , BASE_ADDRESS_TYPE, ORDER_ADDR_GUGUN, ORDER_ADDR_DONG, COURIER_CODE,
+            REGION_GROUP_CODE, REGION_CODE, DELIVERY_ROUND
+        FROM IFWMS113
+        WHERE VBELN = #{orderCode}
+            AND POSNR = '001'
+            AND BWART = #{orderType}
+    </select>
+
+    <insert id="addOrder" parameterType="com.kurly.wms.message.domain.WmsOrder" useGeneratedKeys="false">
+        INSERT INTO IFWMS113 (
+        MANDT, SEQNO, VBELN, POSNR, BWART,
+        PSTYV, ZLIKP_ERDAT, ZLIKP_ERZET, WADAT, KUNNR,
+        KUNAG, WERKS, BWTAR, STKNUM, STATUS,
+        TDATE, IFFLG, RETRY, ERTXT, LFIMG, MEINS, WAERK,
+        CUSRID, CUNAME, CPSTLZ, TELF1, TELE2,
+        SMTP_ADDR, VTEXT, ADDR, CNAME, CPHON,
+        WAREKY, SKUKEY, DESC01, DESC02, CREDAT,
+        CRETIM, LMODAT, LMOTIM, C00101, C00102,
+        C00103, C00106, C00104, C00105, C00107, C00108, C00109, C00110,
+        DEPTID2, USRID3, DEPTID3, USRID4, DEPTID4, KUKLA, USRID1
+        , BASE_ADDRESS_TYPE, ORDER_ADDR_GUGUN, ORDER_ADDR_DONG, COURIER_CODE,
+        REGION_GROUP_CODE, REGION_CODE, DELIVERY_ROUND
+        ) VALUES (
+        NVL(#{mandt}, ' '), F_IFWMS113_SEQ(), NVL(#{vbeln}, ' '), NVL(#{posnr}, ' '), NVL(#{bwart}, ' '),
+        NVL(#{pstyv}, ' '), NVL(#{zlikp_erdat}, ' '), NVL(#{zlikp_erzet}, ' '), NVL(#{wadat}, ' '), NVL(#{kunnr}, ' '),
+        NVL(#{kunag}, ' '), NVL(#{werks}, ' '), NVL(#{bwtar}, ' '), NVL(#{stknum}, ' '), NVL(#{status}, ' '),
+        NVL(#{tdate}, ' '), NVL(#{ifflg}, ' '), NVL(#{retry}, 0), NVL(#{ertxt}, ' '), NVL(#{lfimg}, 0),
+        NVL(#{meins}, ' '), NVL(#{waerk}, ' '), NVL(#{cusrid}, ' '), NVL(#{cuname}, ' '), NVL(#{cpstlz}, ' '),
+        NVL(#{telf1}, ' '), NVL(#{tele2}, ' '), NVL(#{smtp_addr}, ' '), NVL(#{vtext}, ' '), NVL(#{addr}, ' '),
+        NVL(#{cname}, ' '), NVL(#{cphon}, ' '), NVL(#{wareky}, ' '), NVL(#{skukey}, ' '), NVL(#{desc01}, ' '),
+        NVL(#{desc02}, ' '), NVL(#{credat}, ' '), NVL(#{cretim}, ' '), NVL(#{lmodat}, ' '), NVL(#{lmotim}, ' '),
+        NVL(#{c00101}, ' '), NVL(#{c00102}, ' '), NVL(#{c00103}, ' '), NVL(#{c00106}, ' '), NVL(#{c00104}, ' '),
+        NVL(#{c00105}, ' '), NVL(#{c00107}, ' '), NVL(#{c00108}, ' '), NVL(#{c00109}, ' '), NVL(#{c00110}, ' '),
+        NVL(#{deptid2}, ' '), NVL(#{usrid3}, ' '), NVL(#{deptid3}, ' '), NVL(#{usrid4}, ' '), NVL(#{deptid4}, ' '),
+        NVL(#{kukla}, ' '), NVL(#{usrid1}, ' ') , NVL(#{base_address_type}, ' '), NVL(#{order_addr_gugun}, ' '),
+        NVL(#{order_addr_dong}, ' '), NVL(#{courier_code}, ' '), NVL(#{region_group_code}, ' '), NVL(#{region_code}, ' '), NVL(#{delivery_round}, ' '))
+    </insert>
+
+    <update id="modOrder" parameterType="com.kurly.wms.message.domain.WmsOrder">
+        UPDATE IFWMS113 SET
+        STATUS = 'T'
+        , DESC02 = #{desc02}
+        , DEPTID2 = #{deptid2}
+        , DEPTID3 = #{deptid3}
+        , DEPTID4 = #{deptid4}
+        WHERE VBELN = #{vbeln}
+    </update>
+
+    <update id="cancelOrder" parameterType="String">
+        UPDATE IFWMS113 SET
+            RETRY = 1
+			, STATUS = 'D'
+        WHERE VBELN = #{orderCode}
+    </update>
+</mapper>

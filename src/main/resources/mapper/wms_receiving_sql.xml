@@ -1,0 +1,398 @@
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.kurly.wms.message.repository.ReceivingMapper">
+    <select id="findNotCompletedIfList" resultType="com.kurly.wms.message.domain.WmsReceivingIf">
+      SELECT
+            TRANSACTION_ID AS transactionId
+            , PURCHASE_ORDER_CODE AS purchaseOrderCode
+            , PURCHASE_ORDER_ITEM_SEQ AS purchaseOrderItemSeq
+            , PURCHASE_ORDER_SUB_CODE AS purchaseOrderSubCode
+            , PURCHASE_ORDER_ID AS purchaseOrderId
+            , PURCHASE_ORDER_ITEM_ID AS purchaseOrderItemId
+            , INSPECTION_HEADER_ID AS inspectionHeaderId
+            , PURCHASE_ORDER_DATE AS purchaseOrderDate
+            , RECEIVING_EXPECTED_DATE AS receivingExpectedDate
+            , RECEIVING_DATE AS receivingDate
+            , ORDER_TYPE AS orderType
+            , SUPPLIER_CODE AS supplierCode
+            , GOODS_CODE AS goodsCode
+            , UNIT
+            , PO_SELLING_TYPE AS poSellingType
+            , ORDER_QTY AS orderQty
+            , INSPECTION_QTY AS inspectionQty
+            , RECEIVING_QTY AS receivingQty
+            , DEFECT_QTY AS defectQty
+            , EXPIRATION_DATE AS expirationDate
+            , MANUFACTURE_DATE AS manufactureDate
+            , CENTER_SALES_DEADLINE_DATE AS centerSalesDeadlineDate
+            , SELL_AVAILABLE_DATE AS sellAvailableDate
+            , SELL_DEADLINE_DATE AS sellDeadlineDate
+            , RELEASE_CODE AS releaseCode
+            , GIFT_YN AS giftYn
+            , RECEIVING_CENTER AS receivingCenter
+            , RECEIVING_WAREHOUSE AS receivingWarehouse
+            , STATUS
+            , CREATION_DATE AS creationDate
+            , CREATED_BY AS createdBy
+            , UPDATED_DATE AS updatedDate
+            , UPDATED_BY AS updatedBy
+        FROM RECEIVING_IF
+        WHERE STATUS = 'N'
+    </select>
+
+    <insert id="insert" parameterType="com.kurly.wms.message.domain.WmsReceivingIf" useGeneratedKeys="false">
+      INSERT INTO RECEIVING_IF
+        (TRANSACTION_ID
+        , PURCHASE_ORDER_CODE
+        , PURCHASE_ORDER_ITEM_SEQ
+        , PURCHASE_ORDER_SUB_CODE
+        , PURCHASE_ORDER_ID
+        , PURCHASE_ORDER_ITEM_ID
+        , INSPECTION_HEADER_ID
+        , PURCHASE_ORDER_DATE
+        , RECEIVING_EXPECTED_DATE
+        , RECEIVING_DATE
+        , ORDER_TYPE
+        , SUPPLIER_CODE
+        , GOODS_CODE
+        , UNIT
+        , PO_SELLING_TYPE
+        , ORDER_QTY
+        , INSPECTION_QTY
+        , RECEIVING_QTY
+        , DEFECT_QTY
+        , EXPIRATION_DATE
+        , MANUFACTURE_DATE
+        , CENTER_SALES_DEADLINE_DATE
+        , SELL_AVAILABLE_DATE
+        , SELL_DEADLINE_DATE
+        , RELEASE_CODE
+        , GIFT_YN
+        , RECEIVING_CENTER
+        , RECEIVING_WAREHOUSE
+        , STATUS
+        , CREATION_DATE
+        , CREATED_BY
+        , UPDATED_DATE
+        , UPDATED_BY)
+        VALUES
+          (#{transactionId}
+             , #{purchaseOrderCode}
+             , #{purchaseOrderItemSeq}
+             , #{purchaseOrderSubCode}
+             , #{purchaseOrderId}
+             , #{purchaseOrderItemId}
+             , #{inspectionHeaderId}
+             , #{purchaseOrderDate}
+             , #{receivingExpectedDate}
+             , #{receivingDate}
+             , #{orderType}
+             , #{supplierCode}
+             , #{goodsCode}
+             , #{unit}
+             , #{poSellingType}
+             , #{orderQty}
+             , #{inspectionQty}
+             , #{receivingQty}
+             , #{defectQty}
+             , #{expirationDate,jdbcType=DATE}
+             , #{manufactureDate,jdbcType=DATE}
+             , #{centerSalesDeadlineDate}
+             , #{sellAvailableDate}
+             , #{sellDeadlineDate}
+             , #{releaseCode}
+             , #{giftYn}
+             , #{receivingCenter}
+             , #{receivingWarehouse}
+             , 'N'
+             , TO_CHAR(SYSDATE, 'YYYYMMDD HH24:MI:SS')
+             , 'wms-batch-message'
+             , TO_CHAR(SYSDATE, 'YYYYMMDD HH24:MI:SS')
+             , 'wms-batch-message')
+    </insert>
+
+    <insert id="getRECVKY" parameterType="com.kurly.wms.message.domain.WmsReceiving">
+        <selectKey keyProperty="recvky" resultType="String" order="BEFORE">
+            SELECT
+            LPAD(NVL(MAX(TO_NUMBER(NUMBST)),1)+1,10,'0') AS recvky
+            FROM NMOBJ
+            WHERE NUMOBJ = (SELECT NUMOBJ FROM DOCTM WHERE DOCUTY = '102')
+        </selectKey>
+        UPDATE NMOBJ SET
+        NUMBST = #{recvky}
+        WHERE NUMOBJ = (SELECT NUMOBJ FROM DOCTM WHERE DOCUTY = '102')
+    </insert>
+
+    <insert id="saveFromIfToRecdh" parameterType="com.kurly.wms.message.domain.WmsReceiving" useGeneratedKeys="false">
+      INSERT INTO RECDH
+            (RECVKY, WAREKY, RCPTTY, STATDO, SAPSTS,
+               DOCDAT, DOCCAT, DPTNKY, DRELIN, ARCPTD,
+               OWNRKY, INDRCN, CRECVD, RSNCOD, PUTSTS,
+               USRID1, UNAME1, DEPTID1, DNAME1, USRID2,
+               UNAME2, DEPTID2, DNAME2, USRID3, UNAME3,
+               DEPTID3, DNAME3, USRID4, UNAME4, DEPTID4,
+               DNAME4, DOCTXT, CREDAT, CRETIM, CREUSR,
+               LMODAT, LMOTIM, LMOUSR)
+        VALUES
+          (#{recvky}, 'WH1', #{rcptty}, 'NEW', ' ',
+             TO_CHAR(SYSDATE,'YYYYMMDD'), '100', #{lota03}, ' ', TO_CHAR(SYSDATE,'YYYYMMDD'),
+             'TF', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', ' ', ' ', ' ',
+             ' ', ' ', TO_CHAR(SYSDATE, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'HH24MISS'), 'wms-batch-message',
+             TO_CHAR(SYSDATE, 'YYYYMMDD'), TO_CHAR(SYSDATE, 'HH24MISS'), 'wms-batch-message')
+    </insert>
+
+    <insert id="saveFromIfToRecdi" parameterType="com.kurly.wms.message.domain.WmsReceiving" useGeneratedKeys="false">
+      INSERT INTO RECDI
+        (RECVKY, RECVIT, STATIT, SAPSTS, SKUKEY,
+        LOTNUM, AREAKY, LOCAKY, SECTID, TRNUID,
+        PACKID, QTYRCV, QTYDIF, QTYUOM, TRUNTY,
+        MEASKY, UOMKEY, QTPUOM, DUOMKY, QTDUOM,
+        INDRCN, CRECVD, RSNCOD, WORKID, WORKNM,
+        HHTTID, LOTA01, LOTA02, LOTA03, LOTA04,
+        LOTA05, LOTA06, LOTA07, LOTA08, LOTA09,
+        LOTA10, LOTA11, LOTA12, LOTA13, LOTA14,
+        LOTA15, LOTA16, LOTA17, LOTA18, LOTA19,
+        LOTA20, AWMSNO, REFDKY, REFDIT, REFCAT,
+        REFDAT, DESC01, DESC02, ASKU01, ASKU02,
+        ASKU03, ASKU04, ASKU05, EANCOD, GTINCD,
+        SKUG01, SKUG02, SKUG03, SKUG04, SKUG05,
+        GRSWGT, NETWGT, WGTUNT, LENGTH, WIDTHW,
+        HEIGHT, CUBICM, CAPACT, QTYORG, SMANDT,
+        SEBELN, SEBELP, SZMBLNO, SZMIPNO, STRAID,
+        SVBELN, SPOSNR, STKNUM, STPNUM, SWERKS,
+        SLGORT, SDATBG, STDLNR, SSORNU, SSORIT,
+        SMBLNR, SZEILE, SMJAHR, SXBLNR, SBKTXT,
+        RCPRSN, CREDAT, CRETIM, CREUSR, LMODAT, LMOTIM, LMOUSR, SYSTEM_CODE)
+        VALUES
+          (#{recvky}, #{recvit}, #{statit}, #{sapsts}, #{skukey},
+        #{lotnum}, #{areaky}, #{locaky}, #{sectid}, #{trnuid},
+        #{packid}, #{qtyrcv}, #{qtydif}, #{qtyuom}, #{trunty},
+        #{measky}, #{uomkey}, #{qtpuom}, #{duomky}, #{qtduom},
+        #{indrcn}, #{crecvd}, #{rsncod}, #{workid}, #{worknm},
+        #{hhttid}, #{lota01}, #{lota02}, #{lota03}, #{lota04},
+        #{lota05}, #{lota06}, #{lota07}, #{lota08}, #{lota09},
+        #{lota10}, #{lota11}, #{lota12}, #{lota13}, #{lota14},
+        #{lota15}, #{lota16}, #{lota17}, #{lota18}, #{lota19},
+        #{lota20}, #{awmsno}, #{refdky}, #{refdit}, #{refcat},
+        #{refdat}, #{desc01}, #{desc02}, #{asku01}, #{asku02},
+        #{asku03}, #{asku04}, #{asku05}, #{eancod}, #{gtincd},
+        #{skug01}, #{skug02}, #{skug03}, #{skug04}, #{skug05},
+        #{grswgt}, #{netwgt}, #{wgtunt}, #{length}, #{widthw},
+        #{height}, #{cubicm}, #{capact}, #{qtyorg}, #{smandt},
+        #{sebeln}, #{sebelp}, #{szmblno}, #{szmipno}, #{straid},
+        #{svbeln}, #{sposnr}, #{stknum}, #{stpnum}, #{swerks},
+        #{slgort}, #{sdatbg}, #{stdlnr}, #{ssornu}, #{ssorit},
+        #{smblnr}, #{szeile}, #{smjahr}, #{sxblnr}, #{sbktxt},
+        #{rcprsn}, #{credat}, #{cretim}, #{creusr}, #{lmodat}, #{lmotim}, #{lmousr}, 'RMS')
+    </insert>
+
+    <update id="changeStatusReceivingIfList" parameterType="java.util.HashMap">
+      UPDATE RECEIVING_IF
+        SET    STATUS = #{status}
+               , UPDATED_DATE = TO_CHAR(SYSDATE, 'YYYYMMDD HH24:MI:SS')
+               , UPDATED_BY = 'wms-batch-message'
+      WHERE 1=1
+      <if test="ids.size != 0">
+          AND TRANSACTION_ID IN
+          <foreach collection="ids" item="id"  open="(" close=")" separator=",">
+              #{id.value}
+          </foreach>
+      </if>
+    </update>
+
+    <select id="findByTransactionIdIn" resultType="com.kurly.wms.message.domain.WmsReceivingIf" parameterType="Long">
+        SELECT
+            TRANSACTION_ID AS transactionId
+            , PURCHASE_ORDER_CODE AS purchaseOrderCode
+            , PURCHASE_ORDER_ITEM_SEQ AS purchaseOrderItemSeq
+            , PURCHASE_ORDER_SUB_CODE AS purchaseOrderSubCode
+            , PURCHASE_ORDER_ID AS purchaseOrderId
+            , PURCHASE_ORDER_ITEM_ID AS purchaseOrderItemId
+            , INSPECTION_HEADER_ID AS inspectionHeaderId
+            , PURCHASE_ORDER_DATE AS purchaseOrderDate
+            , RECEIVING_EXPECTED_DATE AS receivingExpectedDate
+            , RECEIVING_DATE AS receivingDate
+            , ORDER_TYPE AS orderType
+            , SUPPLIER_CODE AS supplierCode
+            , GOODS_CODE AS goodsCode
+            , UNIT
+            , PO_SELLING_TYPE AS poSellingType
+            , ORDER_QTY AS orderQty
+            , INSPECTION_QTY AS inspectionQty
+            , RECEIVING_QTY AS receivingQty
+            , DEFECT_QTY AS defectQty
+            , EXPIRATION_DATE AS expirationDate
+            , MANUFACTURE_DATE AS manufactureDate
+            , CENTER_SALES_DEADLINE_DATE AS centerSalesDeadlineDate
+            , SELL_AVAILABLE_DATE AS sellAvailableDate
+            , SELL_DEADLINE_DATE AS sellDeadlineDate
+            , RELEASE_CODE AS releaseCode
+            , GIFT_YN AS giftYn
+            , RECEIVING_CENTER AS receivingCenter
+            , RECEIVING_WAREHOUSE AS receivingWarehouse
+            , STATUS
+            , CREATION_DATE AS creationDate
+            , CREATED_BY AS createdBy
+            , UPDATED_DATE AS updatedDate
+            , UPDATED_BY AS updatedBy
+        FROM RECEIVING_IF
+        WHERE 1=1
+        <if test="list.size != 0">
+            AND TRANSACTION_ID IN
+            <foreach collection="list" item="transactionId"  open="(" close=")" separator=",">
+                #{transactionId}
+            </foreach>
+        </if>
+    </select>
+
+    <select id="findReceivingByTransactionIdIn" resultType="com.kurly.wms.message.domain.WmsReceiving" parameterType="Long">
+        SELECT ' ' AS RECVKY
+        , ' ' AS RECVIT
+        , 'NEW' AS STATIT
+        , ' ' AS SAPSTS
+        , ri.goods_code AS SKUKEY -- 상품
+        , ' ' AS LOTNUM
+        , ' ' AS AREAKY
+        , 'RCVLOC' AS LOCAKY
+        , ' ' AS SECTID
+        , ' ' AS TRNUID
+        , ' ' AS PACKID
+        , ri.receiving_qty AS QTYRCV -- 입고수량
+        , 0 AS QTYDIF
+        , ri.order_qty AS QTYUOM -- 기존에 적용되던 값 IFWMS103.MENGE - IFWMS103.MENGE_B - IFWMS103.MENGE_R
+        , ' ' AS TRUNTY
+        , NVL(SW.MEASKY,' ') AS MEASKY
+        , NVL((SELECT UOMKEY FROM UOMMA WHERE UOMKEY = ri.unit), 'EA') AS UOMKEY
+        , NVL(ITFMS.QTPUOM,0) AS QTPUOM
+        , NVL(SM.DUOMKY,' ') AS DUOMKY
+        , NVL(DECODE(SM.QTDUOM,0,9999999,SM.QTDUOM),9999999) AS QTDUOM
+        , ' ' AS INDRCN
+        , ' ' AS CRECVD
+        , ' ' AS RSNCOD
+        , ' ' AS WORKID
+        , ' ' AS WORKNM
+        , ' ' AS HHTTID
+        , ' ' AS LOTA01
+        , NVL(TO_CHAR(ri.manufacture_date,'YYYYMMDD'), ' ') AS LOTA02
+        , ri.supplier_code AS LOTA03 -- 공급사
+        , ri.purchase_order_code AS LOTA04 -- 발주번호 : 기존에 사용하던값 IFWMS103.EBELN||IFWMS103.EBELP
+        , ' ' AS LOTA05
+        , NVL(TO_CHAR(ri.expiration_date,'YYYYMMDD'), ' ')	AS LOTA06 -- 유통기한
+        , TO_CHAR(ri.center_sales_deadline_date,'YYYY/MM/DD') AS LOTA07 -- 센터판매마감일
+        , ' ' AS LOTA08
+        , ' ' AS LOTA09
+        , ' ' AS LOTA10
+        , ' ' AS LOTA11
+        , TO_CHAR(SYSDATE,'YYYYMMDD') AS LOTA12 -- 입고일자
+        , (SELECT TO_CHAR(SYSDATE + SKUWC.SLCPDI,'YYYYMMDD')   FROM SKUWC   WHERE SKUKEY = ri.GOODS_CODE  AND WAREKY = 'WH1'      AND ROWNUM = 1) AS LOTA13 -- 일반출하가능일자
+        , (SELECT TO_CHAR(SYSDATE + SKUWC.SLCPDI + SKUWC.SLCPDO,'YYYYMMDD')      FROM SKUWC    WHERE SKUKEY =  ri.GOODS_CODE   AND WAREKY = 'WH1'    AND ROWNUM = 1) AS LOTA14 -- 이벤트출하가능일자
+        , ' '  AS LOTA15
+        , 0 AS LOTA16
+        , SW.SLCPDI AS LOTA17 -- 판매가능일수
+        , SW.SLCPDO AS LOTA18 -- 유통가능일수
+        , 0 AS LOTA19
+        , 0 AS LOTA20
+        , ri.transaction_id AS AWMSNO -- 일련번호
+        , ri.purchase_order_code AS REFDKY -- 기존에 사용하던값 IFWMS103.EBELN
+        , ri.purchase_order_sub_code AS REFDIT -- 기존에 사용하던값 IFWMS103.EBELP
+        , ' ' AS REFCAT
+        , TO_CHAR(SYSDATE,'YYYYMMDD') AS REFDAT
+        , NVL(SM.DESC01,' ') AS DESC01
+        , NVL(SM.DESC02,' ') AS DESC02
+        , NVL(SM.ASKU01,' ') AS ASKU01
+        , NVL(SM.ASKU02,' ') AS ASKU02
+        , NVL(SM.ASKU03,' ') AS ASKU03
+        , NVL(SM.ASKU04,' ') AS ASKU04
+        , NVL(SM.ASKU05,' ') AS ASKU05
+        , NVL(SM.EANCOD,' ') AS EANCOD
+        , NVL(SM.GTINCD,' ') AS GTINCD
+        , NVL(SM.SKUG01,' ') AS SKUG01
+        , NVL(SM.SKUG02,' ') AS SKUG02
+        , NVL(SM.SKUG03,' ') AS SKUG03
+        , NVL(SM.SKUG04,' ') AS SKUG04
+        , NVL(SM.SKUG05,' ') AS SKUG05
+        , NVL(SM.GRSWGT,0) AS GRSWGT
+        , NVL(SM.NETWGT,0) AS NETWGT
+        , NVL(SM.WGTUNT,' ') AS WGTUNT
+        , NVL(SM.LENGTH,0) AS LENGTH
+        , NVL(SM.WIDTHW,0) AS WIDTHW
+        , NVL(SM.HEIGHT,0) AS HEIGHT
+        , NVL(SM.CUBICM,0) AS CUBICM
+        , NVL(SM.CAPACT,0) AS CAPACT -- 판매마감일수
+        , 0 AS QTYORG
+        , '110' AS SMANDT -- 클라이언트
+        , ri.purchase_order_code AS SEBELN -- 발주번호
+        , ri.purchase_order_sub_code AS SEBELP -- 발주번호순번
+        , ' ' AS SZMBLNO -- 기존에 사용하던값 IFWMS103.MBLNO
+        , TO_CHAR(ri.receiving_expected_date,'YYYYMMDD') AS SZMIPNO -- 입고예정일 : 기존에 사용하던값 IFWMS103.MIPNO
+        , TO_CHAR(ri.receiving_expected_date,'YYYYMMDD') AS STRAID -- 입고예정시간 : 기존에 사용하던값 IFWMS103.VGBEL
+        , ' ' AS SVBELN
+        , ' ' AS SPOSNR
+        , ' ' AS STKNUM
+        , ' ' AS STPNUM
+        , ' ' AS SWERKS
+        , ' ' AS SLGORT -- 기존에 사용하던값 IFWMS103.LGORT
+        , ' ' AS SDATBG
+        , ' ' AS STDLNR
+        , ' ' AS SSORNU
+        , ' ' AS SSORIT
+        , ' ' AS SMBLNR
+        , ' ' AS SZEILE
+        , ' ' AS SMJAHR
+        , ' ' AS SXBLNR
+        , ' ' AS SBKTXT
+        , ' ' AS RCPRSN
+        , TO_CHAR(SYSDATE, 'YYYYMMDD') AS CREDAT
+        , TO_CHAR(SYSDATE, 'HH24MISS') AS CRETIM
+        , ri.created_by AS CREUSR
+        , TO_CHAR(SYSDATE, 'YYYYMMDD') AS LMODAT
+        , TO_CHAR(SYSDATE, 'HH24MISS') AS LMOTIM
+        , ri.created_by AS LMOUSR
+        , DECODE(ri.release_code, 'PARCEL', '104', 'KURLY_PICKUP', '101', '102')  RCPTTY
+        , CASE WHEN NVL(IFWMS.STATUS, ' ') = 'D' then  'D'
+            WHEN NVL(IFWMS.MENGE_R, 0) > 0 then 'W'
+            WHEN SM.SKUKEY is null  then 'GNE'
+            WHEN L01NM.PTNRKY is null then 'SNE'
+            ELSE ri.status
+            END AS STATUS
+        FROM RECEIVING_IF ri
+        LEFT OUTER JOIN SKUMA SM
+            ON SM.SKUKEY = ri.goods_code
+            AND SM.OWNRKY = 'TF'
+        LEFT OUTER JOIN SKUWC SW
+            ON SW.WAREKY = 'WH1'
+            AND SW.OWNRKY = 'TF'
+            AND SW.SKUKEY = ri.goods_code
+        LEFT OUTER JOIN MEASI ITFMS
+            ON ITFMS.WAREKY = 'WH1'
+            AND ITFMS.MEASKY = SW.MEASKY
+            AND ITFMS.UOMKEY = ri.unit
+        LEFT OUTER JOIN BZPTN L01NM
+            ON L01NM.PTNRKY = ri.supplier_code
+            AND L01NM.PTNRTY = 'VD'
+            AND L01NM.OWNRKY = 'TF'
+        LEFT OUTER JOIN  IFWMS103 IFWMS
+            ON IFWMS.EBELN =  ri.PURCHASE_ORDER_CODE
+            AND IFWMS.SKUKEY = ri.GOODS_CODE
+            AND IFWMS.MANDT = '110'
+            AND IFWMS.WAREKY = 'WH1'
+            AND (IFWMS.STATUS = 'D' or IFWMS.MENGE_R > 0)
+            AND IFWMS.BWART =   CASE
+                                    WHEN ri.release_code = 'PARCEL' THEN  '104'
+                                    WHEN ri.release_code = 'KURLY_PICKUP' THEN  '101'
+                                    ELSE '102'
+                                END
+            AND  ROWNUM = 1
+        WHERE 1=1
+        AND ri.STATUS = 'N'
+        <if test="list.size != 0">
+            AND TRANSACTION_ID IN
+            <foreach collection="list" item="transactionId"  open="(" close=")" separator=",">
+                #{transactionId}
+            </foreach>
+        </if>
+    </select>
+
+</mapper>
