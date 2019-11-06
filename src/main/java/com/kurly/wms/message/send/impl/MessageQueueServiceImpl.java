@@ -1,5 +1,6 @@
-package com.kurly.wms.message.send;
+package com.kurly.wms.message.send.impl;
 
+import com.kurly.wms.message.send.MessageQueueService;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
