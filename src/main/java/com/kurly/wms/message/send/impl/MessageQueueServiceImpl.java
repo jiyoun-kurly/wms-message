@@ -19,7 +19,6 @@ public class MessageQueueServiceImpl implements MessageQueueService {
     @Value("${slack.info.slackUrl}")
     private String slackUrl;
 
-    @NonNull
     private final JmsTemplate jmsTemplate;
 
     /**
