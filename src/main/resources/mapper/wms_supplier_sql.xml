@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kurly.wms.message.repository.SupplierRepository">
+    <!-- IFWMS002 : 공급사 등록여부 확인 -->
+    <select id="checkPartner" parameterType="iFDto" resultType="int">
+     	SELECT
+     		COUNT(1) AS COUNT
+     	FROM IFWMS002
+     	WHERE ZCODE = #{zcode}
+     </select>
+
+    <!-- 공급사 등록 -->
+    <insert id="addPartner" parameterType="iFDto">
+        <selectKey keyProperty="seqno" resultType="int" order="BEFORE">
+            SELECT
+            NVL(MAX(SEQNO),0)+1
+            FROM IFWMS002
+        </selectKey>
+        INSERT INTO IFWMS002 (
+        MANDT
+        , SEQNO
+        , ZCLASSIFIER
+        , ZCODE
+        , NAME1
+        , PSTLZ
+        , LAND1
+        , TELF1
+        , TELFX
+        , SMTP_ADDR
+        , STCD2
+        , J_1KFREPRE
+        , AEDAT
+        , TDATE
+        , IFFLG
+        , ADDR
+        , ADDR2
+        , ADDR3
+        , ADDR4
+        , CNAME
+        , CPHON
+        , BNAME
+        , BPHON
+        , CREDAT
+        , CRETIM
+        , WERKS
+        , ERDAT
+        )
+        VALUES (
+        #{mandt}
+        , #{seqno}
+        , #{zclassifier}
+        , #{zcode}
+        , #{name1}
+        , #{pstlz}
+        , #{land1}
+        , #{telf1}
+        , #{telfx}
+        , #{smtp_addr}
+        , #{stcd2}
+        , #{j_1kfrepre}
+        , #{aedat}
+        , #{tdate}
+        , #{ifflg}
+        , #{addr}
+        , #{addr2}
+        , #{addr3}
+        , #{addr4}
+        , #{cname}
+        , #{cphon}
+        , #{bname}
+        , #{bphon}
+        , #{credat}
+        , #{cretim}
+        , #{werks}
+        , #{erdat}
+        )
+    </insert>
+    <!-- 공급사 정보 수정 -->
+    <update id="modPartner" parameterType="iFDto">
+        UPDATE IFWMS002
+        <set>
+            NAME1 = #{name1}
+            , PSTLZ = #{pstlz}
+            , TELF1 = #{telf1}
+            , TELFX = #{telfx}
+            , SMTP_ADDR = #{smtp_addr}
+            , STCD2 = #{stcd2}
+            , J_1KFREPRE = #{j_1kfrepre}
+            , AEDAT = #{aedat}
+            , TDATE = #{tdate}
+            , IFFLG = #{ifflg}
+            , ADDR = #{addr}
+            , ADDR2 = #{addr2}
+            , ADDR3 = #{addr3}
+            , ADDR4 = #{addr4}
+            , CNAME = #{cname}
+            , CPHON = #{cphon}
+            , BNAME = #{bname}
+            , BPHON = #{bphon}
+            , ERDAT = #{erdat}
+        </set>
+        WHERE ZCODE = #{zcode}
+    </update>
+
+
+</mapper>
