@@ -1,7 +1,7 @@
 package com.kurly.wms.message.service.impl;
 
 import com.kurly.wms.message.domain.WmsJobStatus;
-import com.kurly.wms.message.repository.WmsJobStatusMapper;
+import com.kurly.wms.message.repository.WmsJobStatusRepository;
 import com.kurly.wms.message.service.JobStatusService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -15,17 +15,17 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class JobStatusServiceImpl implements JobStatusService {
 
-	private final WmsJobStatusMapper wmsJobStatusMapper;
+	private final WmsJobStatusRepository wmsJobStatusRepository;
 
 	@Override
 	public List<WmsJobStatus> getCurrentRunningJob() throws Exception {
-		return wmsJobStatusMapper.getCurrentRunningJob();
+		return wmsJobStatusRepository.getCurrentRunningJob();
 	}
 
 	@Override
 	@Transactional
 	public int updateJobStatus(String status) throws Exception {
-		return wmsJobStatusMapper.updateJobStatus(status);
+		return wmsJobStatusRepository.updateJobStatus(status);
 	}
 
 	@Override

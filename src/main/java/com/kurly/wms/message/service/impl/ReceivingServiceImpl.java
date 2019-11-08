@@ -3,7 +3,7 @@ package com.kurly.wms.message.service.impl;
 import com.kurly.wms.message.receive.model.RcvTransaction;
 import com.kurly.wms.message.domain.WmsReceiving;
 import com.kurly.wms.message.domain.WmsReceivingIf;
-import com.kurly.wms.message.repository.ReceivingMapper;
+import com.kurly.wms.message.repository.ReceivingRepository;
 import com.kurly.wms.message.service.MessagingService;
 import com.kurly.wms.message.service.ReceivingService;
 import lombok.NonNull;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
 public class ReceivingServiceImpl implements ReceivingService {
 
     @NonNull
-    private final ReceivingMapper receivingMapper;
+    private final ReceivingRepository receivingRepository;
 
     @NonNull
     private final MessagingService messagingService;
@@ -42,7 +42,7 @@ public class ReceivingServiceImpl implements ReceivingService {
     public List<RcvTransaction> removeDuplicatedTransaction(List<RcvTransaction> transactionList) {
         List<Long> receivingNoList = transactionList.stream()
                 .map(RcvTransaction::getTransactionId).collect(Collectors.toList());
-        List<WmsReceivingIf> dupReceivingList = receivingMapper.findByTransactionIdIn(receivingNoList);
+        List<WmsReceivingIf> dupReceivingList = receivingRepository.findByTransactionIdIn(receivingNoList);
 
         if (dupReceivingList.size() > 0) {
             log.info ( "[Duplicate receiving count]" + dupReceivingList.size ());
@@ -65,7 +65,7 @@ public class ReceivingServiceImpl implements ReceivingService {
         for (WmsReceivingIf receivingIf : wmsReceivingIfList) {
             try {
                 receivingIf.setPurchaseOrderSubCode();
-                receivingMapper.insert(receivingIf);
+                receivingRepository.insert(receivingIf);
                 insertSuccessList.add(receivingIf);
             } catch (Exception e){
                 log.error ("##### InsertReceivingIf Exception :" );
@@ -86,7 +86,7 @@ public class ReceivingServiceImpl implements ReceivingService {
      */
     @Override
     public void manualSaveReceiving() {
-        List<WmsReceivingIf> receivingIfList = receivingMapper.findNotCompletedIfList();
+        List<WmsReceivingIf> receivingIfList = receivingRepository.findNotCompletedIfList();
         if(receivingIfList.size() > 0) {
             insertReceiving(receivingIfList);
         }
@@ -120,7 +120,7 @@ public class ReceivingServiceImpl implements ReceivingService {
                 itemCnt += 10;
                 receiving.setRecvky(poCodeRECVKYMap.get(receiving.getRefdky()));
                 receiving.setRecvitFromItemCnt(itemCnt);
-                receivingMapper.saveFromIfToRecdi(receiving);
+                receivingRepository.saveFromIfToRecdi(receiving);
                 successNoList.add(Long.parseLong(receiving.getAwmsno()));
             } catch (Exception e){
                 log.error ("##### InsertReceiving Exception :" );
@@ -153,7 +153,7 @@ public class ReceivingServiceImpl implements ReceivingService {
                 .collect(Collectors.toList());
 
         // recdi, recdh insert 에 필요한 정보 추출
-        List<WmsReceiving> receivingList = receivingMapper.findReceivingByTransactionIdIn(receivingIdList);
+        List<WmsReceiving> receivingList = receivingRepository.findReceivingByTransactionIdIn(receivingIdList);
 
         // 이미 취소된 건, 입고된 건 리스트에서 제거 및 실패 목록에 추가
         receivingList = removeDeletedReceiving(receivingList, selectFailReceivings);
@@ -236,8 +236,8 @@ public class ReceivingServiceImpl implements ReceivingService {
      */
     private void saveRecdh(WmsReceiving receiving) {
         //set recvky
-        receivingMapper.getRECVKY(receiving);
-        receivingMapper.saveFromIfToRecdh(receiving);
+        receivingRepository.getRECVKY(receiving);
+        receivingRepository.saveFromIfToRecdh(receiving);
     }
 
     /**
@@ -249,7 +249,7 @@ public class ReceivingServiceImpl implements ReceivingService {
         HashMap receivingKeys = new HashMap();
         receivingKeys.put("ids", receivingIfIdList);
         receivingKeys.put("status", status);
-        receivingMapper.changeStatusReceivingIfList(receivingKeys);
+        receivingRepository.changeStatusReceivingIfList(receivingKeys);
     }
 
     /**

@@ -1,5 +1,5 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.kurly.wms.message.repository.WmsJobStatusMapper">
+<mapper namespace="com.kurly.wms.message.repository.WmsJobStatusRepository">
     <select id="getCurrentRunningJob" resultType="WmsJobStatus">
       SELECT SEQ, JOB, JOB_GROUP_CODE, STATUS, DESCRIPTION, JOB_TIME FROM JOB_STATUS
             WHERE (JOB LIKE '____CREATE_ORDER' or JOB LIKE '____DELETE_ORDER' ) and status = 'Y'

@@ -4,7 +4,7 @@ import com.kurly.wms.message.receive.model.OrderInterfaceItem;
 import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
 import com.kurly.wms.message.domain.WmsOrder;
 import com.kurly.wms.message.domain.enums.OrderStatus;
-import com.kurly.wms.message.repository.OrderMapper;
+import com.kurly.wms.message.repository.OrderRepository;
 import com.kurly.wms.message.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,7 +21,7 @@ import static java.util.stream.Collectors.toList;
 @Service("orderService")
 public class OrderServiceImpl implements OrderService {
 
-    private final OrderMapper orderMapper;
+    private final OrderRepository orderRepository;
 
     @Value("${slack.info.orderIfSlackChannel}")
     private String orderIfChannel;
@@ -44,7 +44,7 @@ public class OrderServiceImpl implements OrderService {
             return orderNoList;
         }
 
-        return orderMapper.findDuplicateNewOrder(orderNoList);
+        return orderRepository.findDuplicateNewOrder(orderNoList);
     }
 
     /**
@@ -60,14 +60,14 @@ public class OrderServiceImpl implements OrderService {
         for (OrderInterfaceMaster master : orderList) {
             try {
                 OrderInterfaceItem item = master.getOrderItems().get(0);
-                WmsOrder order = orderMapper.findOrder(master.getOrderCode(), item.getOrderType());
+                WmsOrder order = orderRepository.findOrder(master.getOrderCode(), item.getOrderType());
 
                 if (order == null) {
-                    orderMapper.addOrder(WmsOrder.getNewOrder(master));
+                    orderRepository.addOrder(WmsOrder.getNewOrder(master));
                 } else if (!"D".equals(order.getStatus()) && master.isCancelStatus()) {
-                    orderMapper.cancelOrder(master.getOrderCode());
+                    orderRepository.cancelOrder(master.getOrderCode());
                 } else if (order.isChanged(master, item)){
-                    orderMapper.modOrder(WmsOrder.getUpdateOrder(master, item));
+                    orderRepository.modOrder(WmsOrder.getUpdateOrder(master, item));
                 }
 
                 successNoList.add(master.getOrderCode());
