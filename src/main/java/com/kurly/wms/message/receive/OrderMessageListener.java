@@ -2,7 +2,7 @@ package com.kurly.wms.message.receive;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.kurly.wms.message.client.OrderInterfaceMaster;
+import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
 import com.kurly.wms.message.domain.enums.OrderType;
 import com.kurly.wms.message.send.MessageQueueService;
 import com.kurly.wms.message.service.JobStatusService;
@@ -31,6 +31,9 @@ import static java.util.stream.Collectors.toList;
 @RequiredArgsConstructor
 public class OrderMessageListener {
 
+    private static final String CONSUMER = "Consumer.wms.";
+    private static final String QUEUE_ORDER_CHANNEL = CONSUMER + "VirtualTopic.order";
+
     private final OrderService orderService;
 
     private final MessageQueueService messageQueueService;
@@ -44,10 +47,6 @@ public class OrderMessageListener {
 
     @Value("${slack.info.orderIfSlackChannel}")
     private String orderIfChannel;
-
-    private static final String CONSUMER = "Consumer.wms.";
-    private static final String QUEUE_ORDER_CHANNEL = CONSUMER + "VirtualTopic.order";
-
 
     /**
      * 주문정보 Subscriber

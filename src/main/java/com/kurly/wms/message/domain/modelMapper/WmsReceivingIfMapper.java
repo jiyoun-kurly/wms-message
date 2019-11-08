@@ -1,6 +1,6 @@
 package com.kurly.wms.message.domain.modelMapper;
 
-import com.kurly.wms.message.client.RcvTransaction;
+import com.kurly.wms.message.receive.model.RcvTransaction;
 import com.kurly.wms.message.domain.WmsReceivingIf;
 import lombok.Getter;
 import org.modelmapper.ModelMapper;

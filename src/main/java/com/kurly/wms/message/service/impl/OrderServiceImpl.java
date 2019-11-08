@@ -1,7 +1,7 @@
 package com.kurly.wms.message.service.impl;
 
-import com.kurly.wms.message.client.OrderInterfaceItem;
-import com.kurly.wms.message.client.OrderInterfaceMaster;
+import com.kurly.wms.message.receive.model.OrderInterfaceItem;
+import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
 import com.kurly.wms.message.domain.WmsOrder;
 import com.kurly.wms.message.domain.enums.OrderStatus;
 import com.kurly.wms.message.repository.OrderMapper;

@@ -1,6 +1,6 @@
 package com.kurly.wms.message.service.impl;
 
-import com.kurly.wms.message.client.RcvTransaction;
+import com.kurly.wms.message.receive.model.RcvTransaction;
 import com.kurly.wms.message.domain.WmsReceiving;
 import com.kurly.wms.message.domain.WmsReceivingIf;
 import com.kurly.wms.message.repository.ReceivingMapper;

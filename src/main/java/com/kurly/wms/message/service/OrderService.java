@@ -1,6 +1,6 @@
 package com.kurly.wms.message.service;
 
-import com.kurly.wms.message.client.OrderInterfaceMaster;
+import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
 
 import java.util.List;
 
