@@ -8,12 +8,12 @@ import org.springframework.stereotype.Repository;
 public interface SupplierRepository {
 
 	/* 파트너 인터페이스 등록 여부 확인 */
-	int checkPartner(WmsSupplierIf iFDto) throws Exception;
+	int checkPartner(WmsSupplierIf supplierIf) throws Exception;
 
 	/* 파트너 인터페이스 등록 */
-	void addPartner(WmsSupplierIf iFDto) throws Exception;
+	void addPartner(WmsSupplierIf supplierIf) throws Exception;
 
 	/* 파트너 인터페이스 수정 */
-	void modPartner(WmsSupplierIf iFDto) throws Exception;
+	void modPartner(WmsSupplierIf supplierIf) throws Exception;
 
 }
