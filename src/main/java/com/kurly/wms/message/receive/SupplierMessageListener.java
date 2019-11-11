@@ -9,15 +9,11 @@ import com.kurly.wms.message.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.jms.support.JmsMessageHeaderAccessor;
-import org.springframework.messaging.MessageHeaders;
-import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import javax.jms.JMSException;
 import javax.jms.TextMessage;
-import java.util.Map;
 
 @Component
 @RequiredArgsConstructor
@@ -25,22 +21,16 @@ import java.util.Map;
 public class SupplierMessageListener {
 
     private static final String CONSUMER = "Consumer.wms.";
-    private static final String QUEUE_SUPPLIER_CHANNEL = CONSUMER + "VirtualTopic.supplier";
+    private static final String QUEUE_SUPPLIER_CHANNEL = CONSUMER + "VirtualTopic.supplierTest1"; // TODO:: 변경하기
     private final ObjectMapper objectMapper;
     private final SupplierService supplierService;
 
     /**
      * new eSCM 으로 부터 공급사 정보
-     * @param headers
-     * @param messageHeaders
-     * @param messageHeaderAccessor
      * @throws JMSException
      */
-    @JmsListener(destination = QUEUE_SUPPLIER_CHANNEL, containerFactory = "jmsListenerContainerFactory")
-    public void receiveSupplierInfo(@Payload TextMessage supplierInfo,
-                                    @Headers Map<String, Object> headers,
-                                    MessageHeaders messageHeaders,
-                                    JmsMessageHeaderAccessor messageHeaderAccessor) throws JMSException {
+    @JmsListener(destination = QUEUE_SUPPLIER_CHANNEL, containerFactory = "jmsTopicListenerContainerFactory")
+    public void receiveSupplierInfo(@Payload TextMessage supplierInfo) throws JMSException {
 
         try {
             Supplier supplier = objectMapper.readValue(supplierInfo.getText(), new TypeReference<Supplier>() {});

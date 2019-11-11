@@ -58,6 +58,21 @@ public class MessagingConfiguration {
         return factory;
     }
 
+    /**
+     * Used for Topic Receiving Message
+     */
+    @Bean
+    public JmsListenerContainerFactory<?> jmsTopicListenerContainerFactory(ConnectionFactory connectionFactory) {
+
+        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory ( );
+        factory.setConnectionFactory ( connectionFactory );
+        factory.setPubSubDomain ( true );
+        factory.setMessageConverter ( jacksonMessageConverter ( ) );
+
+        return factory;
+    }
+
+
 
     /**
      * Used for Sending Message
