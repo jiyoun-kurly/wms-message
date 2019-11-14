@@ -30,6 +30,8 @@ public class PurchaseOrderMapper {
         wmsPurchaseOrderIf.setProduce_life_date(convertNumber(purchaseOrderItem.getManufactureDate()));
         wmsPurchaseOrderIf.setSelling_type("STORE_FIRST".equals(purchaseOrderItem.getSellingType()) ? "02" : "01");
         wmsPurchaseOrderIf.setSupply_price(null); // TODO :: 확인하기
+        wmsPurchaseOrderIf.setSupply_price(String.valueOf(purchaseOrderItem.getTotalPrice()));
+        wmsPurchaseOrderIf.setOrder_sub_code(String.format("01%04d", purchaseOrderItem.getPurchaseOrderItemSeq()));
         return wmsPurchaseOrderIf;
     }
 
