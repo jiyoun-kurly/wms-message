@@ -2,8 +2,8 @@ package com.kurly.wms.message.receive;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
 import com.kurly.wms.message.domain.enums.OrderType;
+import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
 import com.kurly.wms.message.send.MessageQueueService;
 import com.kurly.wms.message.service.JobStatusService;
 import com.kurly.wms.message.service.MessagingService;
@@ -18,7 +18,6 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +29,6 @@ import static java.util.stream.Collectors.toList;
 @Component
 @RequiredArgsConstructor
 public class OrderMessageListener {
-
-    private static final String CONSUMER = "Consumer.wms.";
-    private static final String QUEUE_ORDER_CHANNEL = CONSUMER + "VirtualTopic.order";
 
     private final OrderService orderService;
 
@@ -48,6 +44,7 @@ public class OrderMessageListener {
     @Value("${slack.info.orderIfSlackChannel}")
     private String orderIfChannel;
 
+
     /**
      * 주문정보 Subscriber
      * - 주문정보 WMS 인터페이스 테이블 (IFWMS113)에 등록
@@ -58,11 +55,11 @@ public class OrderMessageListener {
      * @param messageHeaders
      * @param messageHeaderAccessor
      */
-    @JmsListener(destination = QUEUE_ORDER_CHANNEL, containerFactory = "jmsListenerContainerFactory")
+    @JmsListener(destination = "${messages.topic.order}", containerFactory = "jmsListenerContainerFactory")
     public void orderListener(@Payload TextMessage orderMessage,
                               @Headers Map<String, Object> headers,
                               MessageHeaders messageHeaders,
-                              JmsMessageHeaderAccessor messageHeaderAccessor) throws JMSException, Exception {
+                              JmsMessageHeaderAccessor messageHeaderAccessor) throws Exception {
 
         try {
             log.info("### orderListener");

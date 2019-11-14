@@ -6,6 +6,7 @@ import org.apache.activemq.jms.pool.PooledConnectionFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.config.JmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
@@ -16,6 +17,7 @@ import org.springframework.jms.support.converter.MessageType;
 import javax.jms.ConnectionFactory;
 import javax.jms.DeliveryMode;
 
+@EnableJms
 @Configuration
 public class MessagingConfiguration {
 
@@ -57,22 +59,6 @@ public class MessagingConfiguration {
 
         return factory;
     }
-
-    /**
-     * Used for Topic Receiving Message
-     */
-    @Bean
-    public JmsListenerContainerFactory<?> jmsTopicListenerContainerFactory(ConnectionFactory connectionFactory) {
-
-        DefaultJmsListenerContainerFactory factory = new DefaultJmsListenerContainerFactory ( );
-        factory.setConnectionFactory ( connectionFactory );
-        factory.setPubSubDomain ( true );
-        factory.setMessageConverter ( jacksonMessageConverter ( ) );
-
-        return factory;
-    }
-
-
 
     /**
      * Used for Sending Message

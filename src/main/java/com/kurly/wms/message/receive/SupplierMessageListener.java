@@ -20,16 +20,15 @@ import javax.jms.TextMessage;
 @Slf4j
 public class SupplierMessageListener {
 
-    private static final String CONSUMER = "Consumer.wms.";
-    private static final String QUEUE_SUPPLIER_CHANNEL = CONSUMER + "VirtualTopic.supplierTest1"; // TODO:: 변경하기
     private final ObjectMapper objectMapper;
+
     private final SupplierService supplierService;
 
     /**
      * new eSCM 으로 부터 공급사 정보
      * @throws JMSException
      */
-    @JmsListener(destination = QUEUE_SUPPLIER_CHANNEL, containerFactory = "jmsTopicListenerContainerFactory")
+    @JmsListener(destination = "${messages.topic.supplier}", containerFactory = "jmsListenerContainerFactory")
     public void receiveSupplierInfo(@Payload TextMessage supplierInfo) throws JMSException {
 
         try {
@@ -41,7 +40,6 @@ public class SupplierMessageListener {
             log.error("supplier => {}", supplierInfo.getText());
             ioe.printStackTrace();
         }
-
     }
 
 }

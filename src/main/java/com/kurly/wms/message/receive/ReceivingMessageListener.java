@@ -3,8 +3,8 @@ package com.kurly.wms.message.receive;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
-import com.kurly.wms.message.receive.model.RcvTransaction;
 import com.kurly.wms.message.domain.WmsReceivingIf;
+import com.kurly.wms.message.receive.model.RcvTransaction;
 import com.kurly.wms.message.send.MessageQueueService;
 import com.kurly.wms.message.service.MessagingService;
 import com.kurly.wms.message.service.ReceivingService;
@@ -18,7 +18,6 @@ import org.springframework.messaging.handler.annotation.Headers;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
-import javax.jms.JMSException;
 import javax.jms.TextMessage;
 import java.util.List;
 import java.util.Map;
@@ -28,9 +27,6 @@ import java.util.stream.Collectors;
 @Component
 @RequiredArgsConstructor
 public class ReceivingMessageListener {
-
-    private static final String CONSUMER = "Consumer.wms.";
-    private static final String QUEUE_RECEIVING_CHANNEL = CONSUMER + "VirtualTopic.rcvTransaction";
 
     private final ReceivingService receivingService;
 
@@ -55,11 +51,11 @@ public class ReceivingMessageListener {
      * @param messageHeaders
      * @param messageHeaderAccessor
      */
-    @JmsListener(destination = QUEUE_RECEIVING_CHANNEL, containerFactory = "jmsListenerContainerFactory")
+    @JmsListener(destination = "${messages.topic.receiving}", containerFactory = "jmsListenerContainerFactory")
     public void receivingListener(@Payload TextMessage receiveMessage,
                                   @Headers Map<String, Object> headers,
                                   MessageHeaders messageHeaders,
-                                  JmsMessageHeaderAccessor messageHeaderAccessor) throws JMSException {
+                                  JmsMessageHeaderAccessor messageHeaderAccessor) {
 
         try {
             log.info("### receivingListener");
