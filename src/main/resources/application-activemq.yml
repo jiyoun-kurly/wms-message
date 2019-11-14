@@ -6,6 +6,25 @@ activemq:
   pool:
     max-connections: 50
 
+# Message Broker channel 정보,
+# VirtualTopic방식: Consumer.<name>.VirtualTopic.<name>
+messages:
+  topic:
+    receiving: Consumer.wms.VirtualTopic.rcvTransaction
+    goods : Consumer.wms.VirtualTopic.goods
+    order : Consumer.wms.VirtualTopic.order
+    supplier : Consumer.wms.VirtualTopic.supplier
+    purchase-order : Consumer.wms.VirtualTopic.purchaseOrder
+
+---
+spring:
+  profiles: local
+
+messages:
+  topic:
+    goods : Consumer.wms.VirtualTopic.goodsTest
+    supplier : Consumer.wms.VirtualTopic.supplierTest
+
 ---
 
 spring:

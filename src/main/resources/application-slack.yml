@@ -15,6 +15,7 @@ slack:
    orderIfSlackChannel: "#op_slack_bot_tset"
    receivingIfSlackChannel: "#rms-service-alarm-test"
    wmsDasIfSlackChannel: "#wms-das-alarm"
+   errorNotiChannel : "#op_slack_bot_tset"
 ---
 
 spring:
@@ -33,6 +34,7 @@ slack:
    wmsScannerEtcChannel: "#scanner_bot_test"
    receivingIfSlackChannel: "#rms-service-alarm-test"
    wmsDasIfSlackChannel: "#wms-das-alarm"
+   errorNotiChannel : "#op_slack_bot_tset"
 
 ---
 
@@ -44,6 +46,7 @@ spring:
 
 spring:
   profiles: stg
+
 
 
 ---
@@ -64,3 +67,4 @@ slack:
    orderIfSlackChannel: "#wms_order_if_info"
    receivingIfSlackChannel: "#inbound-service-alarm"
    wmsDasIfSlackChannel: "#wms-das-alarm"
+   errorNotiChannel : "#service-alert-op"

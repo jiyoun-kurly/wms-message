@@ -1,3 +1,4 @@
+
 spring:
   profiles.include:
     - activemq
@@ -16,16 +17,13 @@ logging:
 # JWT Token
 jwtKey: 6447686C5A6D46796257567963773D3D
 
-# Message Broker channel 정보,
-# VirtualTopic방식: Consumer.<name>.VirtualTopic.<name>
-messages:
-  channel:
-    receiving: Consumer.wms.VirtualTopic.rcvTransaction
-
 ---
 
 spring:
   profiles: local
+
+server:
+  port: 9090
 
 ---
 

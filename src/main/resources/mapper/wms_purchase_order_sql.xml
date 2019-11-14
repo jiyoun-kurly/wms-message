@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.kurly.wms.message.repository.PurchaseOrderRepository">
+    <!-- 발주서 등록 인터페이스 new -->
+    <update id="savePurchaseOrder" parameterType="mdOrderDocumentDto">
+        MERGE INTO IFWMS103 A USING dual
+        ON (A.EBELN = #{order_code} AND A.EBELP = #{order_sub_code})
+        WHEN MATCHED THEN UPDATE SET
+            LIFNR       = #{supply_code}
+            ,BWART       = DECODE(#{release_code}, 'IT001', '104', 'IT002', '101', '102')
+            ,BEDAT       = TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDD')
+            ,ZEKKO_AEDAT = TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'HH24MISS')
+            ,MENGE       = CAST(TRIM(#{goods_qnty}) AS NUMBER)
+            ,VGBEL       = TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDD')
+            ,TDATE       = TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDDHH24MISS')
+            ,WAREKY      = #{center_code}
+            ,SKUKEY      = TRIM(#{goods_sub_code})
+            ,DESC01      = NVL(#{pickup_address},' ')
+            ,DESC02      = NVL(#{pickup_detail_address}, ' ')
+            ,CREDAT      = TO_CHAR(SYSDATE, 'YYYYMMDD')
+            ,CRETIM      = TO_CHAR(SYSDATE, 'HH24MISS')
+            ,MBLNO       = DECODE(#{keep_level}, '1', '냉장', '2', '냉동', '3', '상온', '4', '실온', '5', '상필', '일반')
+            ,C00103      = NVL(#{pickup_note}, ' ')
+            ,EINDT       = NVL(#{shelf_life_date}, ' ')
+            ,ZEKPO_AEDAT = NVL(substr(regexp_replace(#{produce_life_date}, '[^0-9]'),0,8), ' ')
+            ,SELLING_TYPE = #{selling_type}
+        WHEN NOT MATCHED THEN INSERT (
+             MANDT
+            ,SEQNO
+            ,EBELN
+            ,EBELP
+            ,LIFNR
+            ,BWART
+            ,BEDAT
+            ,ZEKKO_AEDAT
+            ,LOEKZ
+            ,MENGE
+            ,MEINS
+            ,WERKS
+            ,MENGE_B
+            ,MENGE_R
+            ,VGBEL
+            ,STATUS
+            ,TDATE
+            ,IFFLG
+            ,WAREKY
+            ,SKUKEY
+            ,DESC01
+            ,DESC02
+            ,CREDAT
+            ,CRETIM
+            ,MBLNO
+            ,C00103
+            ,EINDT
+            ,ZEKPO_AEDAT
+            ,SELLING_TYPE
+        ) VALUES (
+            '110'
+            ,(SELECT NVL(MAX(SEQNO),0)+1 FROM IFWMS103)
+            ,#{order_code}
+            ,#{order_sub_code}
+            ,#{supply_code}
+            ,DECODE(#{release_code}, 'IT001', '104', 'IT002', '101', '102')
+            , TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDD')
+            , TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'HH24MISS')
+            ,'N'
+            ,CAST(TRIM(#{goods_qnty}) AS NUMBER)
+            ,'EA'
+            ,'TF'
+            ,0
+            ,0
+            , TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDD')
+            ,'A'
+            , TO_CHAR(TO_DATE(#{warehouse_plan_date}, 'YYYY-MM-DD HH24:MI:SS'),'YYYYMMDDHH24MISS')
+            ,'N'
+            ,#{center_code}
+            ,TRIM(#{goods_sub_code})
+            ,NVL(#{pickup_address},' ')
+            ,NVL(#{pickup_detail_address}, ' ')
+            , TO_CHAR(SYSDATE, 'YYYYMMDD')
+            , TO_CHAR(SYSDATE, 'HH24MISS')
+            , DECODE(#{keep_level}, '1', '냉장', '2', '냉동', '3', '상온', '4', '실온', '5', '상필', '일반')
+            , NVL(#{pickup_note}, ' ')
+            , NVL(#{shelf_life_date}, ' ')
+            , NVL(substr(regexp_replace(#{produce_life_date}, '[^0-9]'),0,8), ' ')
+            , #{selling_type}
+        )
+
+    </update>
+
+
+</mapper>
