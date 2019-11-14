@@ -1,7 +1,7 @@
 package com.kurly.wms.message.domain;
 
-import com.kurly.wms.message.receive.model.OrderInterfaceItem;
-import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
+import com.kurly.wms.message.receive.model.order.OrderInterfaceItem;
+import com.kurly.wms.message.receive.model.order.OrderInterfaceMaster;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

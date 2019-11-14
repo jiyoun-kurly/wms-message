@@ -1,8 +1,7 @@
 
 package com.kurly.wms.message.repository;
 
-import com.kurly.wms.message.domain.MdOrderDocumentDto;
-import com.kurly.wms.message.domain.WmsSupplierIf;
+import com.kurly.wms.message.domain.WmsPurchaseOrderIf;
 import org.springframework.stereotype.Repository;
 
 import java.sql.SQLException;
@@ -11,7 +10,7 @@ import java.sql.SQLException;
 public interface PurchaseOrderRepository {
 
 	/* 발주서등록 인터페이스 등록 */
-	void savePurchaseOrder(MdOrderDocumentDto wmsPurchaseOrderIf) throws SQLException;
+	void savePurchaseOrder(WmsPurchaseOrderIf wmsPurchaseOrderIf) throws SQLException;
 
 
 }

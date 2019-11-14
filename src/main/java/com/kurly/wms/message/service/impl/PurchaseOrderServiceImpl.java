@@ -1,6 +1,6 @@
 package com.kurly.wms.message.service.impl;
 
-import com.kurly.wms.message.domain.MdOrderDocumentDto;
+import com.kurly.wms.message.domain.WmsPurchaseOrderIf;
 import com.kurly.wms.message.repository.PurchaseOrderRepository;
 import com.kurly.wms.message.service.PurchaseOrderService;
 import in.ashwanthkumar.slack.webhook.Slack;
@@ -29,23 +29,23 @@ public class PurchaseOrderServiceImpl implements PurchaseOrderService {
     /**
      * 발주정보 등록 from new eSCM
      *
-     * @param mdOrderDocumentDtos
+     * @param purchaseOrderIfs
      */
-    public void savePurchaseOrder(List<MdOrderDocumentDto> mdOrderDocumentDtos) throws Exception {
-        mdOrderDocumentDtos.forEach(mdOrderDocumentDto -> {
+    public void savePurchaseOrder(List<WmsPurchaseOrderIf> purchaseOrderIfs) throws Exception {
+        purchaseOrderIfs.forEach(purchaseOrderIf -> {
             try {
-                purchaseOrderRepository.savePurchaseOrder(mdOrderDocumentDto);
+                purchaseOrderRepository.savePurchaseOrder(purchaseOrderIf);
             } catch (SQLException e) {
                 try {
                     new Slack(slackUrl)
                             .icon(":escmlogo:")
                             .displayName("eSCM bot")
                             .sendToChannel(errorNotiChannel)
-                            .push(new SlackMessage("[" + mdOrderDocumentDto.getOrder_code() + "]발주정보 연동 중 오류가 발생햇습니다."));
+                            .push(new SlackMessage("[" + purchaseOrderIf.getOrder_code() + "]발주정보 연동 중 오류가 발생햇습니다."));
                 } catch (Exception ignore) {
 
                 }
-                log.error("발주서 등록 error : order_code = {}, order_sub_code = {}" , mdOrderDocumentDto.getOrder_code(), mdOrderDocumentDto.getOrder_sub_code());
+                log.error("발주서 등록 error : order_code = {}, order_sub_code = {}" , purchaseOrderIf.getOrder_code(), purchaseOrderIf.getOrder_sub_code());
 
             }
         });

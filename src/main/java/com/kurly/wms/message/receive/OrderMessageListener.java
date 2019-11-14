@@ -3,7 +3,7 @@ package com.kurly.wms.message.receive;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.CollectionType;
 import com.kurly.wms.message.domain.enums.OrderType;
-import com.kurly.wms.message.receive.model.OrderInterfaceMaster;
+import com.kurly.wms.message.receive.model.order.OrderInterfaceMaster;
 import com.kurly.wms.message.send.MessageQueueService;
 import com.kurly.wms.message.service.JobStatusService;
 import com.kurly.wms.message.service.MessagingService;

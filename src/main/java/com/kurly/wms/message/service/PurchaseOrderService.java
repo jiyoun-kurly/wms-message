@@ -1,10 +1,9 @@
 package com.kurly.wms.message.service;
 
-import com.kurly.wms.message.domain.MdOrderDocumentDto;
-import com.kurly.wms.message.domain.WmsSupplierIf;
+import com.kurly.wms.message.domain.WmsPurchaseOrderIf;
 
 import java.util.List;
 
 public interface PurchaseOrderService {
-    void savePurchaseOrder(List<MdOrderDocumentDto> mdOrderDocumentDtos) throws Exception;
+    void savePurchaseOrder(List<WmsPurchaseOrderIf> wmsPurchaseOrderIfs) throws Exception;
 }

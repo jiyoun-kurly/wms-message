@@ -2,14 +2,10 @@ package com.kurly.wms.message.receive;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.kurly.wms.message.domain.MdOrderDocumentDto;
-import com.kurly.wms.message.domain.WmsSupplierIf;
-import com.kurly.wms.message.receive.model.PurchaseOrder;
-import com.kurly.wms.message.receive.model.Supplier;
+import com.kurly.wms.message.domain.WmsPurchaseOrderIf;
+import com.kurly.wms.message.receive.model.purchase.PurchaseOrder;
 import com.kurly.wms.message.receive.model.mapper.PurchaseOrderMapper;
-import com.kurly.wms.message.receive.model.mapper.SupplierMapper;
 import com.kurly.wms.message.service.PurchaseOrderService;
-import com.kurly.wms.message.service.SupplierService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.jms.annotation.JmsListener;
@@ -42,10 +38,10 @@ public class PurchaseOrderMessageListener {
         try {
             PurchaseOrder purchaseOrder = objectMapper.readValue(purchaseOrderText.getText(), new TypeReference<PurchaseOrder>() {});
             log.debug("purchaseOrder => {}", purchaseOrder);
-            MdOrderDocumentDto purchaseOrderInfo = purchaseOrderMapper.createInstance(purchaseOrder);
-            List<MdOrderDocumentDto> mdOrderDocumentDtos = purchaseOrder.getPurchaseOrderItems().stream()
+            WmsPurchaseOrderIf purchaseOrderInfo = purchaseOrderMapper.createInstance(purchaseOrder);
+            List<WmsPurchaseOrderIf> purchaseOrderIfs = purchaseOrder.getPurchaseOrderItems().stream()
                     .map(item -> purchaseOrderMapper.createInstanceItem(purchaseOrderInfo, item)).collect(Collectors.toList());
-            purchaseOrderService.savePurchaseOrder(mdOrderDocumentDtos);
+            purchaseOrderService.savePurchaseOrder(purchaseOrderIfs);
         } catch (Exception ioe) {
             log.error("purchaseOrder => {}", purchaseOrderText.getText());
             ioe.printStackTrace();

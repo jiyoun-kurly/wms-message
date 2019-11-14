@@ -3,7 +3,7 @@
 
 <mapper namespace="com.kurly.wms.message.repository.PurchaseOrderRepository">
     <!-- 발주서 등록 인터페이스 new -->
-    <update id="savePurchaseOrder" parameterType="mdOrderDocumentDto">
+    <update id="savePurchaseOrder" parameterType="wmsPurchaseOrderIf">
         MERGE INTO IFWMS103 A USING dual
         ON (A.EBELN = #{order_code} AND A.EBELP = #{order_sub_code})
         WHEN MATCHED THEN UPDATE SET
